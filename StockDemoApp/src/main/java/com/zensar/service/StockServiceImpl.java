@@ -7,13 +7,16 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.zensar.dto.Stock;
 import com.zensar.entity.StockEntity;
 import com.zensar.repository.StockRepo;
 
-@Service
+//@Service
 public class StockServiceImpl implements StockService {
     @Autowired
     StockRepo stockRepo;
@@ -74,30 +77,12 @@ public class StockServiceImpl implements StockService {
 
     }
 
-    @Override
-    public Optional<StockEntity> getStockById(int stockId) {
-	Optional<StockEntity> sEntity = stockRepo.findById(stockId);
-	return sEntity;
-
-    }
-
-    private StockEntity convertDTOIntoEntity(Stock stock) {
-	TypeMap<Stock, StockEntity> tMap = modelMapper.typeMap(Stock.class, StockEntity.class);
-	tMap.addMappings(mapper -> {
-	    mapper.map(Stock::getMarket, StockEntity::setMarket);
-	});
-	StockEntity stockEntity = modelMapper.map(stock, StockEntity.class);
-	return stockEntity;
-    }
-
-    private Stock convertEntityIntoDTO(StockEntity stockEntity) {
-	TypeMap<StockEntity, Stock> tMap = modelMapper.typeMap(StockEntity.class, Stock.class);
-	tMap.addMappings(mapper -> {
-	    mapper.map(StockEntity::getMarket, Stock::setMarket);
-	});
-	Stock stock = modelMapper.map(stockEntity, Stock.class);
-	return stock;
-    }
+//    @Override
+//    public Optional<StockEntity> getStockById(int stockId) {
+//	Optional<StockEntity> sEntity = stockRepo.findById(stockId);
+//	return sEntity;
+//
+//    }
 
     @Override
     public List<Stock> getStocksByName(String stockName) {
@@ -114,7 +99,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> getStocksByNameLike(String nameLike) {
-	List<StockEntity> stockEntityList = stockRepo.getNameLikeSQL(nameLike);
+	List<StockEntity> stockEntityList = stockRepo.getByNameLikeSQL(nameLike);
 	List<Stock> stockDtoList = new ArrayList<Stock>();
 	for (StockEntity stockEntity : stockEntityList) {
 	    Stock stock = convertEntityIntoDTO(stockEntity);
@@ -136,14 +121,51 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> getStocksSortedByName(String sortType) {
-	// TODO Auto-generated method stub
-	return null;
+	List<StockEntity> stockEntityList = null;
+	if ("ASC".equalsIgnoreCase(sortType))
+	    stockEntityList = stockRepo.findByOrderByNameAsc();
+
+	else
+	    stockEntityList = stockRepo.findByOrderByNameDesc();
+
+	List<Stock> stockDtoList = new ArrayList<Stock>();
+	for (StockEntity stockEntity : stockEntityList) {
+	    Stock stock = convertEntityIntoDTO(stockEntity);
+	    stockDtoList.add(stock);
+	}
+
+	return stockDtoList;
     }
 
     @Override
     public List<Stock> getStocksByPage(int startIndex, int records) {
-	// TODO Auto-generated method stub
-	return null;
+	Pageable myPageable = PageRequest.of(startIndex, records);
+	Page<StockEntity> stockEntityPage = stockRepo.findAll(myPageable);
+	List<StockEntity> stockEntityList = stockEntityPage.getContent();
+
+	List<Stock> stockDtoList = new ArrayList<Stock>();
+	for (StockEntity stockEntity : stockEntityList) {
+	    Stock stock = convertEntityIntoDTO(stockEntity);
+	    stockDtoList.add(stock);
+	}
+	return stockDtoList;
     }
 
+    private StockEntity convertDTOIntoEntity(Stock stock) {
+	TypeMap<Stock, StockEntity> tMap = modelMapper.typeMap(Stock.class, StockEntity.class);
+	tMap.addMappings(mapper -> {
+	    mapper.map(Stock::getMarket, StockEntity::setMarket);
+	});
+	StockEntity stockEntity = modelMapper.map(stock, StockEntity.class);
+	return stockEntity;
+    }
+
+    private Stock convertEntityIntoDTO(StockEntity stockEntity) {
+	TypeMap<StockEntity, Stock> tMap = modelMapper.typeMap(StockEntity.class, Stock.class);
+	tMap.addMappings(mapper -> {
+	    mapper.map(StockEntity::getMarket, Stock::setMarket);
+	});
+	Stock stock = modelMapper.map(stockEntity, Stock.class);
+	return stock;
+    }
 }

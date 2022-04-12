@@ -19,7 +19,7 @@ public interface StockService {
 
     public abstract List<Stock> getAllStocks();
 
-    public abstract Optional<StockEntity> getStockById(int StockId);
+    // public abstract Optional<StockEntity> getStockById(int StockId);
 
     public List<Stock> getStocksByName(String stockName);
 

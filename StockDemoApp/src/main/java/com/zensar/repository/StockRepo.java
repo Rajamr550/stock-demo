@@ -31,7 +31,17 @@ public interface StockRepo extends JpaRepository<StockEntity, Integer> {
     @Query(value = "SELECT se FROM StockEntity AS se WHERE se.name LIKE %:nameLike%")
     public List<StockEntity> getNameLike(String nameLike);
 
-    @Query(value = "select * from stocks where name LIKE :nameLike", nativeQuery = true)
-    public List<StockEntity> getNameLikeSQL(String nameLike);
+    @Query(value = "SELECT * FROM Stocks Where name LIKE %:nameLike%", nativeQuery = true)
+    List<StockEntity> getByNameLikeSQL(String nameLike);
 
+    List<StockEntity> findByOrderByNameAsc();
+
+    List<StockEntity> findByOrderByNameDesc();
+
+//    @Query(value = "SELECT se FROM StockEntity AS se order by se.name")
+//    List<StockEntity> sortStocksByNameAsc();
+//
+//    @Query(value = "SELECT se FROM StockEntity AS se order by se.name DESC")
+//
+//    List<StockEntity> sortStocksByNameDsc();
 }

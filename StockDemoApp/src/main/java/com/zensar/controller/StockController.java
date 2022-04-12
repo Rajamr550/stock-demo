@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,36 +28,37 @@ import io.swagger.annotations.ApiOperation;
 
 public class StockController {
     @Autowired
+    @Qualifier
     StockService stockService;
 
-    @GetMapping(value = "/stock", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-    @ApiOperation(value = "Reads all stocks", notes = "This REST API returns list of all stocks")
+//    @GetMapping(value = "/stock", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+//    @ApiOperation(value = "Reads all stocks", notes = "This REST API returns list of all stocks")
+//
+//    public List<Stock> getAllStocks() {
+//	return stockService.getAllStocks();
+//    }
 
-    public List<Stock> getAllStocks() {
-	return stockService.getAllStocks();
-    }
+//    @GetMapping(value = "/stock/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+//    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
 
-    @GetMapping(value = "/stock/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+//    public Optional<StockEntity> getStockById(@PathVariable("id") int stockId) {
+//	return stockService.getStockById(stockId);
+//    }
 
-    public Optional<StockEntity> getStockById(@PathVariable("id") int stockId) {
-	return stockService.getStockById(stockId);
-    }
+//    @DeleteMapping(value = "/stock/{id}")
+//    @ApiOperation(value = "Deletes the stock by id", notes = "Deletes the stock by id")
+//
+//    public boolean deleteStockById(@PathVariable("id") int stockId) {
+//	return stockService.deleteStocksById(stockId);
+//    }
 
-    @DeleteMapping(value = "/stock/{id}")
-    @ApiOperation(value = "Deletes the stock by id", notes = "Deletes the stock by id")
-
-    public boolean deleteStockById(@PathVariable("id") int stockId) {
-	return stockService.deleteStocksById(stockId);
-    }
-
-    @DeleteMapping(value = "/stock")
-    @ApiOperation(value = "Deletes the stock list", notes = "Deletes all the stock")
-
-    public boolean deleteAllStocks() {
-	return stockService.deleteAllStocks();
-
-    }
+//    @DeleteMapping(value = "/stock")
+//    @ApiOperation(value = "Deletes the stock list", notes = "Deletes all the stock")
+//
+//    public boolean deleteAllStocks() {
+//	return stockService.deleteAllStocks();
+//
+//    }
 
     @PostMapping(value = "/stock", consumes = { MediaType.APPLICATION_JSON_VALUE,
 	    MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -102,6 +104,7 @@ public class StockController {
 	return new ResponseEntity<List<Stock>>(stockService.getStocksByMarket(stockMarket), HttpStatus.OK);
     }
 
+    // sort
     @GetMapping(value = "/stock/sort/{sortType}", produces = { MediaType.APPLICATION_JSON_VALUE,
 	    MediaType.APPLICATION_XML_VALUE })
     public ResponseEntity<List<Stock>> getStocksSortedByName(@PathVariable("sortType") String sortType) {
