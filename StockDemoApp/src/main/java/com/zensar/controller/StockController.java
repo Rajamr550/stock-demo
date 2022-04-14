@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,50 +15,52 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zensar.dto.Stock;
-import com.zensar.entity.StockEntity;
+import com.zensar.entity.StockDocument;
 import com.zensar.service.StockService;
 
 import io.swagger.annotations.ApiOperation;
 
 @RestController
+@RequestMapping("/stocks")
+@CrossOrigin(origins = "*")
 
 public class StockController {
     @Autowired
-    @Qualifier
     StockService stockService;
 
-//    @GetMapping(value = "/stock", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-//    @ApiOperation(value = "Reads all stocks", notes = "This REST API returns list of all stocks")
-//
-//    public List<Stock> getAllStocks() {
-//	return stockService.getAllStocks();
-//    }
+    @GetMapping(value = "/stock", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @ApiOperation(value = "Reads all stocks", notes = "This REST API returns list of all stocks")
 
-//    @GetMapping(value = "/stock/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-//    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+    public List<Stock> getAllStocks() {
+	return stockService.getAllStocks();
+    }
 
-//    public Optional<StockEntity> getStockById(@PathVariable("id") int stockId) {
-//	return stockService.getStockById(stockId);
-//    }
+    @GetMapping(value = "/stock/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
 
-//    @DeleteMapping(value = "/stock/{id}")
-//    @ApiOperation(value = "Deletes the stock by id", notes = "Deletes the stock by id")
-//
-//    public boolean deleteStockById(@PathVariable("id") int stockId) {
-//	return stockService.deleteStocksById(stockId);
-//    }
+    public Optional<StockDocument> getStockById(@PathVariable("id") int stockId) {
+	return stockService.getStockById2(stockId);
+    }
 
-//    @DeleteMapping(value = "/stock")
-//    @ApiOperation(value = "Deletes the stock list", notes = "Deletes all the stock")
-//
-//    public boolean deleteAllStocks() {
-//	return stockService.deleteAllStocks();
-//
-//    }
+    @DeleteMapping(value = "/stock/{id}")
+    @ApiOperation(value = "Deletes the stock by id", notes = "Deletes the stock by id")
+
+    public boolean deleteStockById(@PathVariable("id") int stockId) {
+	return stockService.deleteStocksById(stockId);
+    }
+
+    @DeleteMapping(value = "/stock")
+    @ApiOperation(value = "Deletes the stock list", notes = "Deletes all the stock")
+
+    public boolean deleteAllStocks() {
+	return stockService.deleteAllStocks();
+
+    }
 
     @PostMapping(value = "/stock", consumes = { MediaType.APPLICATION_JSON_VALUE,
 	    MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.zensar.dto.Stock;
+import com.zensar.entity.StockDocument;
 import com.zensar.entity.StockEntity;
 
 public interface StockService {
@@ -19,7 +20,9 @@ public interface StockService {
 
     public abstract List<Stock> getAllStocks();
 
-    // public abstract Optional<StockEntity> getStockById(int StockId);
+    public abstract Optional<StockEntity> getStockById(int StockId);
+
+    public abstract Optional<StockDocument> getStockById2(int StockId);
 
     public List<Stock> getStocksByName(String stockName);
 

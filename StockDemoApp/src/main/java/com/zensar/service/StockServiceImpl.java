@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.zensar.dto.Stock;
+import com.zensar.entity.StockDocument;
 import com.zensar.entity.StockEntity;
+import com.zensar.exception.InvalidStockIdException;
 import com.zensar.repository.StockRepo;
 
 //@Service
@@ -77,12 +79,12 @@ public class StockServiceImpl implements StockService {
 
     }
 
-//    @Override
-//    public Optional<StockEntity> getStockById(int stockId) {
-//	Optional<StockEntity> sEntity = stockRepo.findById(stockId);
-//	return sEntity;
-//
-//    }
+    @Override
+    public Optional<StockEntity> getStockById(int stockId) {
+	Optional<StockEntity> sEntity = stockRepo.findById(stockId);
+	throw new InvalidStockIdException("" + stockId);
+
+    }
 
     @Override
     public List<Stock> getStocksByName(String stockName) {
@@ -167,5 +169,11 @@ public class StockServiceImpl implements StockService {
 	});
 	Stock stock = modelMapper.map(stockEntity, Stock.class);
 	return stock;
+    }
+
+    @Override
+    public Optional<StockDocument> getStockById2(int StockId) {
+	// TODO Auto-generated method stub
+	return null;
     }
 }
